@@ -1,0 +1,48 @@
+{
+	"name": "@coding-cowboys/cloudflare-worker-app-worker",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"main": "./src/index.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./trpc": "./src/trpc-router.ts"
+	},
+	"scripts": {
+		"build": "tsc -b",
+		"deploy": "wrangler deploy",
+		"wrangler-typecheck": "wrangler deploy --dry-run",
+		"typecheck": "tsgo --noEmit",
+		"test": "vitest run",
+		"lint": "oxlint .",
+		"cf-typegen": "wrangler types",
+		"db:generate": "drizzle-kit generate && bun run ../../scripts/flatten-migrations.ts",
+		"db:migrate": "wrangler d1 migrations apply cloudflare-worker-app --local --persist-to ../../.db/local",
+		"db:clean": "rm -rf ../../.db/local",
+		"db:reset": "bun run db:clean && bun run db:migrate",
+		"db:migrate:prod": "wrangler d1 migrations apply cloudflare-worker-app --remote",
+		"db:studio": "DATABASE_URL=file:$(ls ../../.db/local/v3/d1/miniflare-D1DatabaseObject/*.sqlite | head -1) bun run --bun drizzle-kit studio"
+	},
+	"dependencies": {
+		"@hono/trpc-server": "catalog:",
+		"@hono/zod-validator": "catalog:",
+		"@trpc/server": "catalog:",
+		"better-auth": "catalog:",
+		"cloudflare": "catalog:",
+		"drizzle-orm": "catalog:",
+		"hono": "catalog:",
+		"superjson": "catalog:"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "catalog:",
+		"@cloudflare/workers-types": "catalog:",
+		"@ngneat/falso": "catalog:",
+		"@types/bun": "catalog:",
+		"@types/node": "catalog:",
+		"drizzle-kit": "catalog:",
+		"globals": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:",
+		"wrangler": "catalog:"
+	}
+}
