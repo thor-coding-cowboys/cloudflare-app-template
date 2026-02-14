@@ -1,0 +1,30 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"printWidth": 100,
+	"tabWidth": 2,
+	"useTabs": true,
+	"semi": true,
+	"singleQuote": false,
+	"quoteProps": "as-needed",
+	"jsxSingleQuote": false,
+	"trailingComma": "es5",
+	"bracketSpacing": true,
+	"bracketSameLine": false,
+	"arrowParens": "always",
+	"endOfLine": "lf",
+	"ignorePatterns": [
+		"**/routeTree.gen.ts",
+		"**/components/ui/**",
+		"**/index.css",
+		"wrangler.json",
+		"**/wrangler.jsonc",
+		"**/worker-configuration.d.ts",
+		"**/dist/**",
+		"**/.next/**",
+		"**/node_modules/**",
+		"**/.wrangler/**",
+		"**/*.tsbuildinfo",
+		".claude/**",
+		".deprecated/**"
+	]
+}

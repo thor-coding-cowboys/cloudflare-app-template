@@ -1,0 +1,17 @@
+{
+	"mcpServers": {
+		"context7": {
+			"type": "local",
+			"command": ["npx", "-y", "@upstash/context7-mcp"],
+			"enabled": true
+		},
+		"shadcn": {
+			"command": "npx",
+			"args": ["shadcn@latest", "mcp"]
+		},
+		"hugeicons": {
+			"command": "npx",
+			"args": ["-y", "@hugeicons/mcp-server"]
+		}
+	}
+}

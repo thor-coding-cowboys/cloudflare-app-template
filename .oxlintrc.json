@@ -1,0 +1,47 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"env": {
+		"browser": true,
+		"node": true,
+		"es2024": true
+	},
+	"plugins": ["react", "typescript", "import"],
+	"settings": {
+		"react": {
+			"version": "detect"
+		},
+		"jsx-runtime": "automatic"
+	},
+	"categories": {
+		"correctness": "error",
+		"suspicious": "warn",
+		"pedantic": "off",
+		"perf": "warn",
+		"style": "off",
+		"nursery": "off"
+	},
+	"rules": {
+		"eslint/sort-imports": "off",
+		"eslint/sort-keys": "off",
+		"eslint/no-magic-numbers": "off",
+		"eslint-plugin-import/group-exports": "off",
+		"eslint-plugin-import/no-unassigned-import": ["off"],
+		"import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
+		"react/react-in-jsx-scope": "off"
+	},
+	"ignorePatterns": [
+		"**/routeTree.gen.ts",
+		"**/components/ui/**",
+		"**/index.css",
+		"wrangler.json",
+		"**/wrangler.jsonc",
+		"**/worker-configuration.d.ts",
+		"**/dist/**",
+		"**/.next/**",
+		"**/node_modules/**",
+		"**/.wrangler/**",
+		"**/*.tsbuildinfo",
+		".claude/**",
+		".deprecated/**"
+	]
+}
