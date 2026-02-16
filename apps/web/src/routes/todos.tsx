@@ -8,7 +8,13 @@ import { useSession } from "@/hooks/useSession";
 import { useSignOut } from "@/hooks/useSignOut";
 import { useTRPC } from "@/lib/trpc";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2, Edit2, LogOut, User } from "lucide-react";
+import {
+	PlusIcon,
+	TrashIcon,
+	PencilSquareIcon,
+	ArrowRightOnRectangleIcon,
+	UserIcon,
+} from "@heroicons/react/24/outline";
 
 export const Route = createFileRoute("/todos")({
 	component: TodosPage,
@@ -77,11 +83,11 @@ function TodosPage() {
 							{isAuthenticated ? (
 								<>
 									<span className="text-sm text-muted-foreground flex items-center gap-1">
-										<User className="h-4 w-4" />
+										<UserIcon className="h-4 w-4" />
 										{session?.user?.email}
 									</span>
 									<Button variant="outline" size="sm" onClick={() => signOut()}>
-										<LogOut className="h-4 w-4 mr-1" />
+										<ArrowRightOnRectangleIcon className="h-4 w-4 mr-1" />
 										Sign Out
 									</Button>
 								</>
@@ -108,7 +114,7 @@ function TodosPage() {
 									onChange={(e) => setNewTodoTitle(e.target.value)}
 								/>
 								<Button type="submit" disabled={createMutation.isPending}>
-									<Plus className="h-4 w-4 mr-1" />
+									<PlusIcon className="h-4 w-4 mr-1" />
 									Add
 								</Button>
 							</form>
@@ -156,7 +162,7 @@ function TodosPage() {
 												{isAuthenticated && (
 													<div className="flex gap-1">
 														<Button variant="ghost" size="sm" onClick={() => handleStartEdit(todo)}>
-															<Edit2 className="h-4 w-4" />
+															<PencilSquareIcon className="h-4 w-4" />
 														</Button>
 														<Button
 															variant="ghost"
@@ -164,7 +170,7 @@ function TodosPage() {
 															onClick={() => handleDelete(todo.id)}
 															disabled={deleteMutation.isPending}
 														>
-															<Trash2 className="h-4 w-4 text-destructive" />
+															<TrashIcon className="h-4 w-4 text-destructive" />
 														</Button>
 													</div>
 												)}

@@ -13,7 +13,7 @@
 		"lint": "oxlint ."
 	},
 	"dependencies": {
-		"lucide-react": "catalog:",
+		"@heroicons/react": "catalog:",
 		"react": "catalog:"
 	},
 	"devDependencies": {

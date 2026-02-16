@@ -1,9 +1,18 @@
-import type { LucideIcon } from "lucide-react";
-import { Cloud, Database, Layers, Layout, Lock, Server } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+import {
+	CloudIcon,
+	CircleStackIcon,
+	Squares2X2Icon,
+	Square2StackIcon,
+	LockClosedIcon,
+	ServerIcon,
+} from "@heroicons/react/24/outline";
 import { createElement } from "react";
 
+type HeroiconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
 interface FeatureCardProps {
-	icon: LucideIcon;
+	icon: HeroiconComponent;
 	title: string;
 	description: string;
 }
@@ -101,33 +110,33 @@ export function LandingPage({ baseUrl = "" }: LandingPageProps) {
 					className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
 				},
 				createElement(FeatureCard, {
-					icon: Cloud,
+					icon: CloudIcon,
 					title: "Cloudflare Workers",
 					description:
 						"Edge-deployed serverless functions with global distribution and low latency",
 				}),
 				createElement(FeatureCard, {
-					icon: Server,
+					icon: ServerIcon,
 					title: "Hono + tRPC",
 					description: "Fast edge framework with type-safe APIs",
 				}),
 				createElement(FeatureCard, {
-					icon: Lock,
+					icon: LockClosedIcon,
 					title: "Better Auth",
 					description: "Complete authentication solution with multiple providers",
 				}),
 				createElement(FeatureCard, {
-					icon: Layout,
+					icon: Square2StackIcon,
 					title: "React + TanStack",
 					description: "Modern React with TanStack Router for type-safe routing",
 				}),
 				createElement(FeatureCard, {
-					icon: Layers,
+					icon: Squares2X2Icon,
 					title: "shadcn/ui + Tailwind",
 					description: "Beautiful, accessible UI components styled with utility-first CSS",
 				}),
 				createElement(FeatureCard, {
-					icon: Database,
+					icon: CircleStackIcon,
 					title: "D1 + Drizzle ORM",
 					description: "Cloudflare's edge database with a type-safe SQL-like ORM",
 				})
