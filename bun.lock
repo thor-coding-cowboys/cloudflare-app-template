@@ -98,7 +98,7 @@
         "wrangler": "catalog:",
       },
     },
-    "packages/cloudflare-worker-app-components": {
+    "packages/components": {
       "name": "@coding-cowboys/cloudflare-worker-app-components",
       "version": "0.0.0",
       "dependencies": {
@@ -317,7 +317,7 @@
 
     "@cloudflare/workers-types": ["@cloudflare/workers-types@4.20251213.0", "", {}, "sha512-PJAGdKfU7hs39C2YOFNLTdrfdqG6rbaVj5UuI306zS+TPokiskRLEgUXKqS6avN9Uu9Nyuf2a0hqoumLQCnJlQ=="],
 
-    "@coding-cowboys/cloudflare-worker-app-components": ["@coding-cowboys/cloudflare-worker-app-components@workspace:packages/cloudflare-worker-app-components"],
+    "@coding-cowboys/cloudflare-worker-app-components": ["@coding-cowboys/cloudflare-worker-app-components@workspace:packages/components"],
 
     "@coding-cowboys/cloudflare-worker-app-util": ["@coding-cowboys/cloudflare-worker-app-util@workspace:packages/util"],
 

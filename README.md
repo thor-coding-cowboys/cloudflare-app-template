@@ -26,38 +26,43 @@ A minimal full-stack TypeScript template for building apps on Cloudflare Workers
 
 ## Template Setup
 
-After creating your app from this template, you need to:
+After creating your app from this template:
 
-1. **Rename app references** - Replace `cloudflare-worker-app` with your app name everywhere:
-   - `apps/worker/wrangler.jsonc` - `name` and `database_name`
-   - `apps/worker/package.json` - npm scripts
-   - `apps/worker/src/features/auth/better-auth.ts` - `modelName`
+```bash
+# Install dependencies
+bun install
 
-2. **Update package names** - Replace `@coding-cowboys/cloudflare-worker-app` with your org/name:
-   - `package.json` - root name
-   - `apps/worker/package.json` - worker name
-   - `apps/web/package.json` - web name
-   - `apps/web/vite.config.ts` - import alias
-   - `apps/web/src/routes/__root.tsx` - tRPC import
-   - `apps/web/src/lib/trpc.ts` - tRPC import
-   - `packages/util/package.json` - util name
-   - `bun.lock` - workspace references, auto updates with `bun install`
+# Run the interactive setup CLI
+bun run setup
+```
 
-3. **Update preview scripts** - Replace `cloudflare-worker-app` with your app name:
-   - `.github/scripts/preview/create-d1-db.ts` - `dbName` variable
-   - `.github/scripts/preview/get-d1-db-id.ts` - `dbName` variable
-   - `.github/scripts/preview/delete-d1-db.ts` - `dbName` variable
-   - `.github/scripts/preview/prepare-wrangler-config.ts` - `workerName` variable
-   - `.github/workflows/preview.yml` - worker delete command name
+The setup script will prompt for:
 
-4. **Configure GitHub Actions for CI/CD** - Add the following secrets in your GitHub repository settings (Settings > Secrets and variables > Actions):
-   - `CLOUDFLARE_API_TOKEN` - Create an API token at [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens) with "Edit Cloudflare Workers" permissions
-   - `CLOUDFLARE_ACCOUNT_ID` - Found in Cloudflare Dashboard > Workers & Pages > Overview (right sidebar)
-   - `CLOUDFLARE_WORKERS_SUBDOMAIN` - Your workers subdomain (e.g., `your-subdomain` from `your-subdomain.workers.dev`)
+| Prompt                       | Example         | What it replaces                                               |
+| ---------------------------- | --------------- | -------------------------------------------------------------- |
+| npm org (without @)          | `my-org`        | `@coding-cowboys/` in all package.json files, imports, configs |
+| App name                     | `my-app`        | `cloudflare-worker-app` in wrangler, scripts, DB names         |
+| GitHub org                   | `my-github-org` | `thor-coding-cowboys` in repo URLs                             |
+| Display org name             | `My Org`        | `Coding Cowboys` in LICENSE, SEO meta tags                     |
+| Display app name             | `My App`        | `Cloudflare App Template` in SEO, header                       |
+| Cloudflare workers subdomain | `my-subdomain`  | `coding-cowboys` in `*.workers.dev` URLs                       |
 
-   These secrets are required for:
-   - **CI workflow**: Auto-deploy to production on push to `main`
-   - **Preview workflow**: Create isolated preview environments for each PR
+Press enter on any prompt to skip it and keep the template default.
+
+After setup:
+
+1. Run `bun install` to update the lockfile
+2. Create your D1 database: `bunx wrangler d1 create <your-app-name>`
+3. Update the `database_id` in `apps/worker/wrangler.jsonc`
+4. Set your auth secret: `bunx wrangler secret put BETTER_AUTH_SECRET`
+
+### Configure GitHub Actions
+
+Add the following secrets in your GitHub repository settings (Settings > Secrets and variables > Actions):
+
+- `CLOUDFLARE_API_TOKEN` - Create an API token at [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens) with "Edit Cloudflare Workers" permissions
+- `CLOUDFLARE_ACCOUNT_ID` - Found in Cloudflare Dashboard > Workers & Pages > Overview (right sidebar)
+- `CLOUDFLARE_WORKERS_SUBDOMAIN` - Your workers subdomain (e.g., `your-subdomain` from `your-subdomain.workers.dev`)
 
 ## Getting Started
 
@@ -95,7 +100,7 @@ This template uses a hybrid approach for optimal SEO and user experience:
 ### Key Files
 
 - `apps/worker/src/features/seo/seo-route.ts` - SSR route handler
-- `packages/cloudflare-worker-app-components/src/landing-page.ts` - Shared landing page component
+- `packages/components/src/landing-page.ts` - Shared landing page component
 - `apps/web/public/robots.txt` - Search engine directives
 - `apps/web/public/sitemap.xml` - Site structure for crawlers
 

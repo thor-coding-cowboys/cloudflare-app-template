@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { $ } from "bun";
+import { APP_NAME } from "../common";
 
 const prNumber = process.env.PR_NUMBER;
 if (!prNumber) {
@@ -8,7 +9,7 @@ if (!prNumber) {
 	process.exit(1);
 }
 
-const dbName = `cloudflare-worker-app-db-pr-${prNumber}`;
+const dbName = `${APP_NAME}-db-pr-${prNumber}`;
 
 // Check if database already exists
 try {

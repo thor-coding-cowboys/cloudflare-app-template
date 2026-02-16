@@ -20,7 +20,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@coding-cowboys/cloudflare-worker-app-components": [
-				"../../packages/cloudflare-worker-app-components/src/index.ts",
+				"../../packages/components/src/index.ts",
 			],
 		},
 	},

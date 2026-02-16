@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-export {};
+import { APP_NAME } from "../common";
 
 const prNumber = process.env.PR_NUMBER;
 const dbId = process.env.DB_ID;
@@ -11,7 +11,7 @@ if (!prNumber || !dbId || !dbName) {
 	process.exit(1);
 }
 
-const workerName = `cloudflare-worker-app-pr-${prNumber}`;
+const workerName = `${APP_NAME}-pr-${prNumber}`;
 
 // Read wrangler.jsonc from worker directory
 const configPath = "apps/worker/wrangler.jsonc";
