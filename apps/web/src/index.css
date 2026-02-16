@@ -3,6 +3,9 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/figtree";
 
+/* Tell Tailwind to scan the shared components package */
+@source "../../packages/cloudflare-worker-app-components";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -130,4 +133,10 @@
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+}
+
+/* SSR Landing Page - Force Tailwind to include these classes */
+.ssr-landing-page-classes {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  @apply bg-gradient-to-b from-background to-muted;
 } 

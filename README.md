@@ -8,6 +8,7 @@ A minimal full-stack TypeScript template for building apps on Cloudflare Workers
 - **API**: Both Hono REST endpoints and tRPC
 - **Database**: Drizzle ORM with D1 (SQLite)
 - **Type-safe**: End-to-end type safety from database to frontend
+- **SEO**: Edge-side rendering with Hono for landing page, SPA for authenticated routes
 
 ## Tech Stack
 
@@ -73,6 +74,37 @@ bun db:migrate
 # Start development
 bun run dev
 ```
+
+## SEO Implementation
+
+This template uses a hybrid approach for optimal SEO and user experience:
+
+### Architecture
+
+- **Landing Page (`/`)**: Edge-side rendered by Hono with full SEO meta tags
+- **App Routes (`/todos`, `/auth/*`)**: Client-side SPA for fast navigation
+- **API Routes (`/api/*`)**: Hono REST endpoints
+
+### How it Works
+
+1. **Server-Side Rendering**: The landing page is rendered at the edge using Hono + React's `renderToString`, ensuring search engines receive fully rendered HTML with proper meta tags
+2. **Hydration**: Client-side React hydrates the server-rendered HTML, enabling SPA navigation
+3. **SEO Meta Tags**: Includes Open Graph, Twitter Cards, JSON-LD structured data, and canonical URLs
+4. **Static Assets**: `robots.txt` and `sitemap.xml` for search engine discovery
+
+### Key Files
+
+- `apps/worker/src/features/seo/seo-route.ts` - SSR route handler
+- `packages/cloudflare-worker-app-components/src/landing-page.ts` - Shared landing page component
+- `apps/web/public/robots.txt` - Search engine directives
+- `apps/web/public/sitemap.xml` - Site structure for crawlers
+
+### Benefits
+
+- **SEO**: Landing page is fully crawlable with rich meta information
+- **Performance**: Edge rendering delivers content from closest data center
+- **UX**: SPA navigation after initial load for fast app experience
+- **Best of Both Worlds**: No need for full SSR framework like Next.js
 
 ## License
 

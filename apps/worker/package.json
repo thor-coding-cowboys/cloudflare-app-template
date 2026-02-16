@@ -24,6 +24,7 @@
 		"db:studio": "DATABASE_URL=file:$(ls ../../.db/local/v3/d1/miniflare-D1DatabaseObject/*.sqlite | head -1) bun run --bun drizzle-kit studio"
 	},
 	"dependencies": {
+		"@coding-cowboys/cloudflare-worker-app-components": "workspace:*",
 		"@hono/trpc-server": "catalog:",
 		"@hono/zod-validator": "catalog:",
 		"@trpc/server": "catalog:",
@@ -31,6 +32,8 @@
 		"cloudflare": "catalog:",
 		"drizzle-orm": "catalog:",
 		"hono": "catalog:",
+		"react": "catalog:",
+		"react-dom": "catalog:",
 		"superjson": "catalog:"
 	},
 	"devDependencies": {
@@ -39,6 +42,8 @@
 		"@ngneat/falso": "catalog:",
 		"@types/bun": "catalog:",
 		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"@types/react-dom": "catalog:",
 		"drizzle-kit": "catalog:",
 		"globals": "catalog:",
 		"typescript": "catalog:",

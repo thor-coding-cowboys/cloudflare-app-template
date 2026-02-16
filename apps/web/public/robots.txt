@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /auth/sign-in
+Allow: /auth/sign-up
+Disallow: /todos
+
+Sitemap: https://cloudflare-worker-app.coding-cowboys.workers.dev/sitemap.xml
