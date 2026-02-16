@@ -1,10 +1,5 @@
 import type { TRPCRouter } from "@coding-cowboys/cloudflare-worker-app-worker/trpc";
-import {
-	createTRPCClient,
-	httpBatchStreamLink,
-	httpSubscriptionLink,
-	splitLink,
-} from "@trpc/client";
+import { createTRPCClient, httpLink, httpSubscriptionLink, splitLink } from "@trpc/client";
 import type { inferRouterOutputs } from "@trpc/server";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import superjson from "superjson";
@@ -21,7 +16,7 @@ export const trpcClient = createTRPCClient<TRPCRouter>({
 				transformer: superjson,
 				url: "/api/trpc",
 			}),
-			false: httpBatchStreamLink({
+			false: httpLink({
 				transformer: superjson,
 				url: "/api/trpc",
 			}),
