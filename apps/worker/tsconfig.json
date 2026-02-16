@@ -16,4 +16,5 @@
 		"types": ["@cloudflare/workers-types", "@cloudflare/vitest-pool-workers", "vite/client"],
 	},
 	"include": ["src", "test", "worker-configuration.d.ts"],
+	"exclude": ["../../packages"],
 }

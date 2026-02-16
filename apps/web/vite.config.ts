@@ -34,7 +34,7 @@ export default defineConfig({
 		outDir: "dist",
 	},
 	server: {
-		host: true, // Bind to all interfaces (0.0.0.0) to allow access from other devices
+		host: true,
 		port: 5173,
 	},
 });

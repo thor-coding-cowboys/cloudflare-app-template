@@ -19,7 +19,9 @@
 		"types": ["@cloudflare/workers-types", "vite/client", "@types/node"],
 		"paths": {
 			"@/*": ["./src/*"],
-			"@coding-cowboys/scorebrawl-worker/*": ["../worker/src/*"],
+			"@coding-cowboys/cloudflare-worker-app-components": [
+				"../../packages/cloudflare-worker-app-components/src/index.ts",
+			],
 		},
 	},
 	"include": ["src", "index.html", "../worker/worker-configuration.d.ts"],
