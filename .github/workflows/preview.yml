@@ -140,12 +140,12 @@ jobs:
         run: bun install
 
       - name: 🗑️ Delete Worker
-        uses: cloudflare/wrangler-action@v3
         continue-on-error: true
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: delete --name "cloudflare-worker-app-pr-${{ github.event.pull_request.number }}" --force
+        run: bun run .github/scripts/preview/delete-worker.ts
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: 🗑️ Delete D1 Database
         continue-on-error: true

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { renderToString } from "react-dom/server";
 import { createElement } from "react";
-import { LandingPage } from "@coding-cowboys/cloudflare-worker-app-components";
+import { LandingPage } from "../../../../../packages/components/src";
 import type { HonoEnv } from "../context";
 
 // Inlined CSS from the build - this is generated at build time and ensures

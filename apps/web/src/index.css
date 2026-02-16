@@ -4,7 +4,7 @@
 @import "@fontsource-variable/figtree";
 
 /* Tell Tailwind to scan the shared components package */
-@source "../../packages/cloudflare-worker-app-components";
+@source "../../packages/components";
 
 @custom-variant dark (&:is(.dark *));
 
