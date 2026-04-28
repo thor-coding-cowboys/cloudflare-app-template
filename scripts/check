@@ -1,0 +1,56 @@
+#!/usr/bin/env bun
+import { $ } from "bun";
+import chalk from "chalk";
+import { dirname, join } from "path";
+
+const rootDir = join(dirname(import.meta.path), "..");
+$.cwd(rootDir);
+
+async function runQuiet(cmd: TemplateStringsArray, ...args: unknown[]) {
+	const result = await $(cmd, ...args).quiet().nothrow();
+	if (result.exitCode !== 0) {
+		if (result.stdout.length > 0) process.stdout.write(result.stdout);
+		if (result.stderr.length > 0) process.stderr.write(result.stderr);
+		throw new Error("Command failed");
+	}
+}
+
+const tasks = [
+	{ name: "format", emoji: "🎨", cmd: () => runQuiet`bun scripts/format` },
+	{ name: "lint", emoji: "🔍", cmd: () => runQuiet`bun scripts/lint` },
+	{ name: "typecheck", emoji: "🔷", cmd: () => runQuiet`bun scripts/typecheck` },
+	{ name: "test", emoji: "🧪", cmd: () => runQuiet`bun scripts/test` },
+];
+
+console.log(chalk.bold("\n🔍 Running checks\n"));
+console.log(chalk.dim(`Running ${tasks.length} checks...\n`));
+
+const start = performance.now();
+
+const results = await Promise.allSettled(
+	tasks.map(async (task) => {
+		const taskStart = performance.now();
+		try {
+			await task.cmd();
+			const duration = ((performance.now() - taskStart) / 1000).toFixed(1);
+			console.log(`  ${chalk.green("✓")} ${task.emoji} ${task.name} ${chalk.dim(`(${duration}s)`)}`);
+			return { name: task.name, success: true };
+		} catch {
+			const duration = ((performance.now() - taskStart) / 1000).toFixed(1);
+			console.log(`  ${chalk.red("✗")} ${task.emoji} ${task.name} ${chalk.dim(`(${duration}s)`)}`);
+			return { name: task.name, success: false };
+		}
+	}),
+);
+
+const duration = ((performance.now() - start) / 1000).toFixed(1);
+const failures = results.filter((r) => r.status === "fulfilled" && !r.value.success);
+
+console.log();
+
+if (failures.length > 0) {
+	console.log(chalk.red(chalk.bold(`✗ ${failures.length} check(s) failed`)) + chalk.dim(` in ${duration}s\n`));
+	process.exit(1);
+} else {
+	console.log(chalk.green(chalk.bold("✓ All checks passed")) + chalk.dim(` in ${duration}s\n`));
+}

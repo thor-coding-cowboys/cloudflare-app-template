@@ -1,0 +1,12 @@
+#!/usr/bin/env bun
+import { $ } from "bun";
+import chalk from "chalk";
+import { dirname, join } from "path";
+
+const rootDir = join(dirname(import.meta.path), "..");
+$.cwd(rootDir);
+
+console.log(chalk.bold("\n🧪 Running tests...\n"));
+const { exitCode } = await $`${join(rootDir, "node_modules/.bin/turbo")} run test`.nothrow();
+console.log(exitCode === 0 ? chalk.green("\n✅ All tests passed!\n") : chalk.red("\n❌ Tests failed!\n"));
+process.exit(exitCode);

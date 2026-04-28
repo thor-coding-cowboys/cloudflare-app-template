@@ -30,7 +30,7 @@ const rl = createInterface({ input: process.stdin, output: process.stdout });
 
 function ask(question: string, hint: string): Promise<string> {
 	return new Promise((resolve) => {
-		rl.question(`${question} (${hint}, enter to skip): `, (answer) => {
+		rl.question(`${question} (${hint}, enter to keep): `, (answer) => {
 			resolve(answer.trim());
 		});
 	});
@@ -70,15 +70,35 @@ function isBinary(path: string): boolean {
 
 console.log("\nCloudflare App Template Setup\n");
 console.log("This will replace template placeholders with your project values.");
-console.log("Press enter to skip a prompt and keep the current value.\n");
+console.log("Press enter to keep the current value.\n");
 
-const npmOrg = (await ask("npm org (without @)", `current: ${DEFAULTS.npmOrg}`)) || "";
-const appName = (await ask("App name", `current: ${DEFAULTS.appName}`)) || "";
-const githubOrg = (await ask("GitHub org", `current: ${DEFAULTS.githubOrg}`)) || "";
-const displayOrg = (await ask("Display org name", `current: ${DEFAULTS.displayOrg}`)) || "";
-const displayApp = (await ask("Display app name", `current: ${DEFAULTS.displayApp}`)) || "";
+const npmOrg =
+	(await ask(
+		"Package scope prefix (before / in package.json names, without @)",
+		`replaces @${DEFAULTS.npmOrg}, current: ${DEFAULTS.npmOrg}`
+	)) || "";
+const appName =
+	(await ask("App name", `replaces ${DEFAULTS.appName}, current: ${DEFAULTS.appName}`)) || "";
+const githubOrg =
+	(await ask(
+		"GitHub org or username (use your username if you have no org)",
+		`replaces ${DEFAULTS.githubOrg}, current: ${DEFAULTS.githubOrg}`
+	)) || "";
+const displayOrg =
+	(await ask(
+		"Display org name",
+		`replaces '${DEFAULTS.displayOrg}', current: ${DEFAULTS.displayOrg}`
+	)) || "";
+const displayApp =
+	(await ask(
+		"Display app name",
+		`replaces '${DEFAULTS.displayApp}', current: ${DEFAULTS.displayApp}`
+	)) || "";
 const cfSubdomain =
-	(await ask("Cloudflare workers subdomain", `current: ${DEFAULTS.cfSubdomain}`)) || "";
+	(await ask(
+		"Cloudflare workers subdomain",
+		`replaces ${DEFAULTS.cfSubdomain}, current: ${DEFAULTS.cfSubdomain}`
+	)) || "";
 
 rl.close();
 
@@ -145,5 +165,7 @@ for (const filePath of files) {
 console.log(`\nDone! Updated ${filesChanged} file(s).`);
 console.log("\nNext steps:");
 console.log("  1. Run `bun install` to update the lockfile");
-console.log("  2. Update the D1 database_id in apps/worker/wrangler.jsonc");
-console.log("  3. Run `bun run dev` to verify everything works\n");
+console.log("  2. Create your D1 database: `bunx wrangler d1 create <your-app-name>`");
+console.log("  3. Update the `database_id` in apps/worker/wrangler.jsonc");
+console.log("  4. Set your auth secret: `bunx wrangler secret put BETTER_AUTH_SECRET`");
+console.log("  5. Run `bun run dev` to verify everything works\n");

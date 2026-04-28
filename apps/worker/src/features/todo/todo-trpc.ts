@@ -2,6 +2,7 @@ import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 import { protectedProcedure, publicProcedure, createTRPCRouter } from "../../trpc";
 import { todo } from "./todo-schema";
+import { generateTodoId } from "./todo-id-util";
 
 export const todoRouter = createTRPCRouter({
 	list: publicProcedure.query(async ({ ctx }) => {
@@ -14,7 +15,7 @@ export const todoRouter = createTRPCRouter({
 			return ctx.db
 				.insert(todo)
 				.values({
-					id: crypto.randomUUID(),
+					id: generateTodoId(),
 					title: input.title,
 					completed: false,
 					userId: ctx.authentication.user.id,

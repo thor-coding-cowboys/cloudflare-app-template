@@ -8,7 +8,6 @@ A minimal full-stack TypeScript template for building apps on Cloudflare Workers
 - **API**: Both Hono REST endpoints and tRPC
 - **Database**: Drizzle ORM with D1 (SQLite)
 - **Type-safe**: End-to-end type safety from database to frontend
-- **SEO**: Edge-side rendering with Hono for landing page, SPA for authenticated routes
 
 ## Tech Stack
 
@@ -17,12 +16,6 @@ A minimal full-stack TypeScript template for building apps on Cloudflare Workers
 - **API**: tRPC (at `/api/trpc/*`)
 - **Database**: Cloudflare D1 with Drizzle ORM
 - **Auth**: better-auth
-
-## Prerequisites
-
-1. **Cloudflare account** - Set up and authenticate with `bunx wrangler login`
-2. **Create D1 database** - `bunx wrangler d1 create <your-app-name>`
-3. **Set better-auth secret** - `bunx wrangler secret put BETTER_AUTH_SECRET`
 
 ## Template Setup
 
@@ -38,23 +31,43 @@ bun run setup
 
 The setup script will prompt for:
 
-| Prompt                       | Example         | What it replaces                                               |
-| ---------------------------- | --------------- | -------------------------------------------------------------- |
-| npm org (without @)          | `my-org`        | `@coding-cowboys/` in all package.json files, imports, configs |
-| App name                     | `my-app`        | `cloudflare-worker-app` in wrangler, scripts, DB names         |
-| GitHub org                   | `my-github-org` | `thor-coding-cowboys` in repo URLs                             |
-| Display org name             | `My Org`        | `Coding Cowboys` in LICENSE, SEO meta tags                     |
-| Display app name             | `My App`        | `Cloudflare App Template` in SEO, header                       |
-| Cloudflare workers subdomain | `my-subdomain`  | `coding-cowboys` in `*.workers.dev` URLs                       |
+| Prompt                       | Example         | What it replaces                                                        |
+| ---------------------------- | --------------- | ----------------------------------------------------------------------- |
+| Package scope prefix         | `my-org`        | `@coding-cowboys` in all `package.json` names (e.g. `@my-org/app-name`) |
+| App name                     | `my-app`        | `app` in wrangler, scripts, DB names                                    |
+| GitHub org or username       | `my-github-org` | `palmithor` in repo URLs (use your username if no org)                  |
+| Display org name             | `My Org`        | `Pálmi Þór` in LICENSE, headers                                         |
+| Display app name             | `My App`        | `Fjármál 1` in headers                                                  |
+| Cloudflare workers subdomain | `my-subdomain`  | `coding-cowboys` in `*.workers.dev` URLs                                |
 
-Press enter on any prompt to skip it and keep the template default.
+Press enter on any prompt to keep the template default.
 
-After setup:
+### After Setup
 
-1. Run `bun install` to update the lockfile
-2. Create your D1 database: `bunx wrangler d1 create <your-app-name>`
-3. Update the `database_id` in `apps/worker/wrangler.jsonc`
-4. Set your auth secret: `bunx wrangler secret put BETTER_AUTH_SECRET`
+1. **Authenticate with Cloudflare**
+
+   ```bash
+   bunx wrangler login
+   ```
+
+2. **Update the lockfile**
+
+   ```bash
+   bun install
+   ```
+
+3. **Create a D1 database**
+
+   ```bash
+   bunx wrangler d1 create <your-app-name>
+   ```
+
+4. **Update the `database_id`** in `apps/worker/wrangler.jsonc`
+
+5. **Set the better-auth secret**
+   ```bash
+   bunx wrangler secret put BETTER_AUTH_SECRET
+   ```
 
 ### Configure GitHub Actions
 
@@ -79,37 +92,6 @@ bun db:migrate
 # Start development
 bun run dev
 ```
-
-## SEO Implementation
-
-This template uses a hybrid approach for optimal SEO and user experience:
-
-### Architecture
-
-- **Landing Page (`/`)**: Edge-side rendered by Hono with full SEO meta tags
-- **App Routes (`/todos`, `/auth/*`)**: Client-side SPA for fast navigation
-- **API Routes (`/api/*`)**: Hono REST endpoints
-
-### How it Works
-
-1. **Server-Side Rendering**: The landing page is rendered at the edge using Hono + React's `renderToString`, ensuring search engines receive fully rendered HTML with proper meta tags
-2. **Hydration**: Client-side React hydrates the server-rendered HTML, enabling SPA navigation
-3. **SEO Meta Tags**: Includes Open Graph, Twitter Cards, JSON-LD structured data, and canonical URLs
-4. **Static Assets**: `robots.txt` and `sitemap.xml` for search engine discovery
-
-### Key Files
-
-- `apps/worker/src/features/seo/seo-route.ts` - SSR route handler
-- `packages/components/src/landing-page.ts` - Shared landing page component
-- `apps/web/public/robots.txt` - Search engine directives
-- `apps/web/public/sitemap.xml` - Site structure for crawlers
-
-### Benefits
-
-- **SEO**: Landing page is fully crawlable with rich meta information
-- **Performance**: Edge rendering delivers content from closest data center
-- **UX**: SPA navigation after initial load for fast app experience
-- **Best of Both Worlds**: No need for full SSR framework like Next.js
 
 ## License
 

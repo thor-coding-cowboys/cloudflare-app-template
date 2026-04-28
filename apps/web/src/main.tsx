@@ -9,9 +9,6 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 
 import "./index.css";
-// Import to ensure Tailwind scans SSR landing page classes
-import _ssrClasses from "./ssr-classes";
-void _ssrClasses;
 import { TRPCProvider, trpcClient } from "./lib/trpc";
 import { queryClient } from "./lib/query-client";
 
@@ -38,7 +35,6 @@ declare module "@tanstack/react-router" {
 // Render the app
 const rootElement = document.getElementById("app");
 if (rootElement) {
-	rootElement.innerHTML = "";
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>

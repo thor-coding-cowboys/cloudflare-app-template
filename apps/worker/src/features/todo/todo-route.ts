@@ -3,7 +3,10 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { todo } from "./todo-schema";
 import { eq, and } from "drizzle-orm";
-import { EnforcedAuthHonoEnv } from "../context";
+import { HTTPException } from "hono/http-exception";
+import type { Context } from "hono";
+import type { HonoEnv } from "../context";
+import { generateTodoId } from "./todo-id-util";
 
 const createTodoSchema = z.object({
 	title: z.string().min(1),
@@ -15,24 +18,29 @@ const updateTodoSchema = z.object({
 	completed: z.boolean().optional(),
 });
 
-export const todoRouter = new Hono<EnforcedAuthHonoEnv>()
+function requireAuth(c: Context<HonoEnv>) {
+	const auth = c.get("authentication");
+	if (!auth) {
+		throw new HTTPException(401, { message: "Unauthorized" });
+	}
+	return auth;
+}
+
+export const todoRouter = new Hono<HonoEnv>()
 	.get("/", async (c) => {
-		const auth = c.get("authentication");
 		const db = c.get("db");
-
-		const todos = await db.select().from(todo).where(eq(todo.userId, auth.user.id));
-
+		const todos = await db.select().from(todo);
 		return c.json({ todos });
 	})
 	.post("/", zValidator("json", createTodoSchema), async (c) => {
-		const auth = c.get("authentication");
+		const auth = requireAuth(c);
 		const db = c.get("db");
 		const data = c.req.valid("json");
 
 		const newTodo = await db
 			.insert(todo)
 			.values({
-				id: crypto.randomUUID(),
+				id: generateTodoId(),
 				title: data.title,
 				completed: false,
 				userId: auth.user.id,
@@ -44,7 +52,7 @@ export const todoRouter = new Hono<EnforcedAuthHonoEnv>()
 		return c.json({ todo: newTodo[0] }, 201);
 	})
 	.patch("/", zValidator("json", updateTodoSchema), async (c) => {
-		const auth = c.get("authentication");
+		const auth = requireAuth(c);
 		const db = c.get("db");
 		const data = c.req.valid("json");
 
@@ -65,7 +73,7 @@ export const todoRouter = new Hono<EnforcedAuthHonoEnv>()
 		return c.json({ todo: updated[0] });
 	})
 	.delete("/:id", async (c) => {
-		const auth = c.get("authentication");
+		const auth = requireAuth(c);
 		const db = c.get("db");
 		const { id } = c.req.param();
 
