@@ -16,7 +16,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "catalog:",
-        "@coding-cowboys/cloudflare-worker-app-components": "workspace:*",
         "@coding-cowboys/cloudflare-worker-app-worker": "workspace:*",
         "@fontsource-variable/figtree": "catalog:",
         "@heroicons/react": "catalog:",
@@ -35,6 +34,7 @@
         "cmdk": "catalog:",
         "date-fns": "catalog:",
         "embla-carousel-react": "catalog:",
+        "hono": "catalog:",
         "input-otp": "catalog:",
         "next-themes": "catalog:",
         "radix-ui": "catalog:",
@@ -71,7 +71,6 @@
       "name": "@coding-cowboys/cloudflare-worker-app-worker",
       "version": "0.0.0",
       "dependencies": {
-        "@coding-cowboys/cloudflare-worker-app-components": "workspace:*",
         "@hono/trpc-server": "catalog:",
         "@hono/zod-validator": "catalog:",
         "@trpc/server": "catalog:",
@@ -82,6 +81,7 @@
         "react": "catalog:",
         "react-dom": "catalog:",
         "superjson": "catalog:",
+        "ulid": "catalog:",
       },
       "devDependencies": {
         "@cloudflare/vitest-pool-workers": "catalog:",
@@ -96,19 +96,6 @@
         "typescript": "catalog:",
         "vitest": "catalog:",
         "wrangler": "catalog:",
-      },
-    },
-    "packages/components": {
-      "name": "@coding-cowboys/cloudflare-worker-app-components",
-      "version": "0.0.0",
-      "dependencies": {
-        "@heroicons/react": "catalog:",
-        "react": "catalog:",
-      },
-      "devDependencies": {
-        "@types/react": "catalog:",
-        "@types/react-dom": "catalog:",
-        "typescript": "catalog:",
       },
     },
     "packages/util": {
@@ -316,8 +303,6 @@
     "@cloudflare/workerd-windows-64": ["@cloudflare/workerd-windows-64@1.20260128.0", "", { "os": "win32", "cpu": "x64" }, "sha512-fdJwSqRkJsAJFJ7+jy0th2uMO6fwaDA8Ny6+iFCssfzlNkc4dP/twXo+3F66FMLMe/6NIqjzVts0cpiv7ERYbQ=="],
 
     "@cloudflare/workers-types": ["@cloudflare/workers-types@4.20251213.0", "", {}, "sha512-PJAGdKfU7hs39C2YOFNLTdrfdqG6rbaVj5UuI306zS+TPokiskRLEgUXKqS6avN9Uu9Nyuf2a0hqoumLQCnJlQ=="],
-
-    "@coding-cowboys/cloudflare-worker-app-components": ["@coding-cowboys/cloudflare-worker-app-components@workspace:packages/components"],
 
     "@coding-cowboys/cloudflare-worker-app-util": ["@coding-cowboys/cloudflare-worker-app-util@workspace:packages/util"],
 

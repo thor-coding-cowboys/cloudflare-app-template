@@ -14,7 +14,6 @@
 	"dependencies": {
 		"@base-ui/react": "catalog:",
 		"@coding-cowboys/cloudflare-worker-app-worker": "workspace:*",
-		"@coding-cowboys/cloudflare-worker-app-components": "workspace:*",
 		"@fontsource-variable/figtree": "catalog:",
 		"@hugeicons/core-free-icons": "catalog:",
 		"@hugeicons/react": "catalog:",
@@ -32,6 +31,7 @@
 		"date-fns": "catalog:",
 		"embla-carousel-react": "catalog:",
 		"@heroicons/react": "catalog:",
+		"hono": "catalog:",
 		"input-otp": "catalog:",
 		"next-themes": "catalog:",
 		"radix-ui": "catalog:",

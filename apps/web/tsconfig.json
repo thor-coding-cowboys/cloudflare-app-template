@@ -19,9 +19,6 @@
 		"types": ["@cloudflare/workers-types", "vite/client", "@types/node"],
 		"paths": {
 			"@/*": ["./src/*"],
-			"@coding-cowboys/cloudflare-worker-app-components": [
-				"../../packages/components/src/index.ts",
-			],
 		},
 	},
 	"include": ["src", "index.html", "../worker/worker-configuration.d.ts"],

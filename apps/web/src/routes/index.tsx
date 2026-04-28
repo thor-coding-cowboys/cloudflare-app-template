@@ -1,4 +1,4 @@
-import { LandingPage } from "@coding-cowboys/cloudflare-worker-app-components";
+import { LandingPage } from "./-components/landing-page";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({

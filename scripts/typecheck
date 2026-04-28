@@ -1,0 +1,12 @@
+#!/usr/bin/env bun
+import { $ } from "bun";
+import chalk from "chalk";
+import { dirname, join } from "path";
+
+const rootDir = join(dirname(import.meta.path), "..");
+$.cwd(rootDir);
+
+console.log(chalk.bold("\n🔷 Type checking...\n"));
+const { exitCode } = await $`${join(rootDir, "node_modules/.bin/turbo")} run typecheck`.nothrow();
+console.log(exitCode === 0 ? chalk.green("\n✅ No type errors!\n") : chalk.red("\n❌ Type errors found!\n"));
+process.exit(exitCode);

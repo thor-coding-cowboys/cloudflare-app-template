@@ -1,0 +1,12 @@
+#!/usr/bin/env bun
+import { $ } from "bun";
+import chalk from "chalk";
+import { dirname, join } from "path";
+
+const rootDir = join(dirname(import.meta.path), "..");
+$.cwd(rootDir);
+
+console.log(chalk.bold("\n🔍 Linting...\n"));
+const { exitCode } = await $`${join(rootDir, "node_modules/.bin/oxlint")} .`.nothrow();
+console.log(exitCode === 0 ? chalk.green("\n✅ No lint issues!\n") : chalk.red("\n❌ Lint issues found!\n"));
+process.exit(exitCode);

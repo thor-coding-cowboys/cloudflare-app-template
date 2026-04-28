@@ -1,0 +1,12 @@
+#!/usr/bin/env bun
+import { $ } from "bun";
+import chalk from "chalk";
+import { dirname, join } from "path";
+
+const rootDir = join(dirname(import.meta.path), "..");
+$.cwd(rootDir);
+
+console.log(chalk.bold("\n🎨 Checking formatting...\n"));
+const { exitCode } = await $`${join(rootDir, "node_modules/.bin/oxfmt")} --check . *.md`.nothrow();
+console.log(exitCode === 0 ? chalk.green("\n✅ All files are formatted!\n") : chalk.red("\n❌ Formatting issues found!\n"));
+process.exit(exitCode);

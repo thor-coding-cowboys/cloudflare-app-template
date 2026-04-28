@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TodosHonoRouteImport } from './routes/todos-hono'
 import { Route as TodosRouteImport } from './routes/todos'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthAuthSignUpRouteImport } from './routes/_auth/auth/sign-up'
 import { Route as AuthAuthSignInRouteImport } from './routes/_auth/auth/sign-in'
 
+const TodosHonoRoute = TodosHonoRouteImport.update({
+  id: '/todos-hono',
+  path: '/todos-hono',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TodosRoute = TodosRouteImport.update({
   id: '/todos',
   path: '/todos',
@@ -43,12 +49,14 @@ const AuthAuthSignInRoute = AuthAuthSignInRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/todos': typeof TodosRoute
+  '/todos-hono': typeof TodosHonoRoute
   '/auth/sign-in': typeof AuthAuthSignInRoute
   '/auth/sign-up': typeof AuthAuthSignUpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/todos': typeof TodosRoute
+  '/todos-hono': typeof TodosHonoRoute
   '/auth/sign-in': typeof AuthAuthSignInRoute
   '/auth/sign-up': typeof AuthAuthSignUpRoute
 }
@@ -57,19 +65,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
   '/todos': typeof TodosRoute
+  '/todos-hono': typeof TodosHonoRoute
   '/_auth/auth/sign-in': typeof AuthAuthSignInRoute
   '/_auth/auth/sign-up': typeof AuthAuthSignUpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/todos' | '/auth/sign-in' | '/auth/sign-up'
+  fullPaths: '/' | '/todos' | '/todos-hono' | '/auth/sign-in' | '/auth/sign-up'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/todos' | '/auth/sign-in' | '/auth/sign-up'
+  to: '/' | '/todos' | '/todos-hono' | '/auth/sign-in' | '/auth/sign-up'
   id:
     | '__root__'
     | '/'
     | '/_auth'
     | '/todos'
+    | '/todos-hono'
     | '/_auth/auth/sign-in'
     | '/_auth/auth/sign-up'
   fileRoutesById: FileRoutesById
@@ -78,10 +88,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   TodosRoute: typeof TodosRoute
+  TodosHonoRoute: typeof TodosHonoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/todos-hono': {
+      id: '/todos-hono'
+      path: '/todos-hono'
+      fullPath: '/todos-hono'
+      preLoaderRoute: typeof TodosHonoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/todos': {
       id: '/todos'
       path: '/todos'
@@ -138,6 +156,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   TodosRoute: TodosRoute,
+  TodosHonoRoute: TodosHonoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

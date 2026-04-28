@@ -6,7 +6,8 @@
 	"main": "./src/index.ts",
 	"exports": {
 		".": "./src/index.ts",
-		"./trpc": "./src/trpc-router.ts"
+		"./trpc": "./src/trpc-router.ts",
+		"./rpc": "./rpc.ts"
 	},
 	"scripts": {
 		"build": "tsc -b",
@@ -24,7 +25,6 @@
 		"db:studio": "DATABASE_URL=file:$(ls ../../.db/local/v3/d1/miniflare-D1DatabaseObject/*.sqlite | head -1) bun run --bun drizzle-kit studio"
 	},
 	"dependencies": {
-		"@coding-cowboys/cloudflare-worker-app-components": "workspace:*",
 		"@hono/trpc-server": "catalog:",
 		"@hono/zod-validator": "catalog:",
 		"@trpc/server": "catalog:",
@@ -34,7 +34,8 @@
 		"hono": "catalog:",
 		"react": "catalog:",
 		"react-dom": "catalog:",
-		"superjson": "catalog:"
+		"superjson": "catalog:",
+		"ulid": "catalog:"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "catalog:",
