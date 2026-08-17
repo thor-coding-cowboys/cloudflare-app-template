@@ -9,16 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TodosHonoRouteImport } from './routes/todos-hono'
-import { Route as TodosRouteImport } from './routes/todos'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthAuthSignUpRouteImport } from './routes/_auth/auth/sign-up'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as TodosRouteImport } from './routes/todos'
+import { Route as TodosHonoRouteImport } from './routes/todos-hono'
 import { Route as AuthAuthSignInRouteImport } from './routes/_auth/auth/sign-in'
+import { Route as AuthAuthSignUpRouteImport } from './routes/_auth/auth/sign-up'
 
-const TodosHonoRoute = TodosHonoRouteImport.update({
-  id: '/todos-hono',
-  path: '/todos-hono',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TodosRoute = TodosRouteImport.update({
@@ -26,23 +30,19 @@ const TodosRoute = TodosRouteImport.update({
   path: '/todos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const TodosHonoRoute = TodosHonoRouteImport.update({
+  id: '/todos-hono',
+  path: '/todos-hono',
   getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthAuthSignUpRoute = AuthAuthSignUpRouteImport.update({
-  id: '/auth/sign-up',
-  path: '/auth/sign-up',
-  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthAuthSignInRoute = AuthAuthSignInRouteImport.update({
   id: '/auth/sign-in',
   path: '/auth/sign-in',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthAuthSignUpRoute = AuthAuthSignUpRouteImport.update({
+  id: '/auth/sign-up',
+  path: '/auth/sign-up',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
@@ -93,18 +93,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/todos-hono': {
-      id: '/todos-hono'
-      path: '/todos-hono'
-      fullPath: '/todos-hono'
-      preLoaderRoute: typeof TodosHonoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/todos': {
-      id: '/todos'
-      path: '/todos'
-      fullPath: '/todos'
-      preLoaderRoute: typeof TodosRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -114,25 +107,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/todos': {
+      id: '/todos'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof TodosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/auth/sign-up': {
-      id: '/_auth/auth/sign-up'
-      path: '/auth/sign-up'
-      fullPath: '/auth/sign-up'
-      preLoaderRoute: typeof AuthAuthSignUpRouteImport
-      parentRoute: typeof AuthRouteRoute
+    '/todos-hono': {
+      id: '/todos-hono'
+      path: '/todos-hono'
+      fullPath: '/todos-hono'
+      preLoaderRoute: typeof TodosHonoRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/auth/sign-in': {
       id: '/_auth/auth/sign-in'
       path: '/auth/sign-in'
       fullPath: '/auth/sign-in'
       preLoaderRoute: typeof AuthAuthSignInRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/auth/sign-up': {
+      id: '/_auth/auth/sign-up'
+      path: '/auth/sign-up'
+      fullPath: '/auth/sign-up'
+      preLoaderRoute: typeof AuthAuthSignUpRouteImport
       parentRoute: typeof AuthRouteRoute
     }
   }
