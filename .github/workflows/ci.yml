@@ -51,14 +51,6 @@ jobs:
         env:
           GITHUB_REF: ${{ github.ref }}
 
-      - name: 🔁 Remap d1 migration names to nested layout
-        if: github.ref == 'refs/heads/main'
-        run: bunx wrangler d1 execute cloudflare-worker-app --remote --command "CREATE TABLE IF NOT EXISTS d1_migrations(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); UPDATE d1_migrations SET name = replace(substr(name, instr(name,'_')+1), '.sql', '/migration.sql') WHERE name NOT LIKE '%/%';"
-        working-directory: apps/worker
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
       - name: 🗄️ Apply database migrations
         if: github.ref == 'refs/heads/main'
         run: bun run db:migrate:prod
