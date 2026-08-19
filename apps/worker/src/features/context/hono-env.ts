@@ -1,12 +1,11 @@
-import { betterAuth } from "better-auth";
 import { getDb } from "../../db";
-import { AuthType } from "../auth";
+import { AuthType, auth } from "../auth";
 
 export type HonoEnv = {
 	Bindings: Env;
 	Variables: {
 		db: ReturnType<typeof getDb>;
-		betterAuth: ReturnType<typeof betterAuth>;
+		betterAuth: typeof auth;
 		authentication?: AuthType;
 	};
 };
@@ -14,7 +13,7 @@ export type HonoEnv = {
 export type EnforcedAuthHonoEnv = HonoEnv & {
 	Variables: {
 		db: ReturnType<typeof getDb>;
-		betterAuth: ReturnType<typeof betterAuth>;
+		betterAuth: typeof auth;
 		authentication: AuthType;
 	};
 };

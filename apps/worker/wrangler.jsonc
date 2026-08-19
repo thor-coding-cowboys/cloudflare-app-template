@@ -11,7 +11,9 @@
     {
 	"binding": "DB",
       "database_name": "cloudflare-worker-app",
-      "database_id": "1dc56877-56de-470c-b318-ce172a1353f0"
+      "database_id": "1dc56877-56de-470c-b318-ce172a1353f0",
+      "migrations_dir": "migrations",
+      "migrations_pattern": "migrations/*/migration.sql"
     }
 	],
 	"observability": {
