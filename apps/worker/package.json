@@ -18,7 +18,6 @@
 		"lint": "oxlint .",
 		"cf-typegen": "wrangler types",
 		"db:generate": "drizzle-kit generate",
-		"predb:migrate": "wrangler d1 execute cloudflare-worker-app --local --persist-to ../../.db/local --command \"CREATE TABLE IF NOT EXISTS d1_migrations(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); UPDATE d1_migrations SET name = replace(substr(name, instr(name,'_')+1), '.sql', '/migration.sql') WHERE name NOT LIKE '%/%';\"",
 		"db:migrate": "wrangler d1 migrations apply cloudflare-worker-app --local --persist-to ../../.db/local",
 		"db:clean": "rm -rf ../../.db/local",
 		"db:reset": "bun run db:clean && bun run db:migrate",
