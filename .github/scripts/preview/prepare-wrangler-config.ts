@@ -28,6 +28,7 @@ config.assets.directory = "./apps/web/dist/client";
 config.d1_databases[0].database_id = dbId;
 config.d1_databases[0].database_name = dbName;
 config.d1_databases[0].migrations_dir = "./apps/worker/migrations";
+config.d1_databases[0].migrations_pattern = "./apps/worker/migrations/*/migration.sql";
 
 // Remove custom domain routes for preview
 config.routes = undefined;
