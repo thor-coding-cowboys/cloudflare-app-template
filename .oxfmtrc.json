@@ -25,6 +25,7 @@
 		"**/.wrangler/**",
 		"**/*.tsbuildinfo",
 		".claude/**",
+		".agents/**",
 		".deprecated/**"
 	]
 }
