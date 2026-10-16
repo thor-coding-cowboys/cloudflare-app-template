@@ -28,10 +28,10 @@ jobs:
         uses: rharkor/caching-for-turbo@cda201ff2b32699a2ae9f59704db029e3dde4fbd
 
       - name: 💅 Format check
-        run: bun run format
+        run: bun run fmt:check
 
       - name: 🔍 Lint
-        run: bun run lint
+        run: bun run lint:check
 
       - name: 🔎 Typecheck
         run: bun typecheck

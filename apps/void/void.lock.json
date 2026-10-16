@@ -1,0 +1,12 @@
+{
+	"version": 1,
+	"source": {
+		"name": "cloudflare-worker-app-void"
+	},
+	"resolved": {
+		"account_id": "c353a73d43fd7550389a31d035341177",
+		"compatibility_date": "2026-02-24",
+		"name": "cloudflare-worker-app-void"
+	},
+	"text": "{\n  \"account_id\": \"c353a73d43fd7550389a31d035341177\",\n  \"compatibility_date\": \"2026-02-24\",\n  \"name\": \"cloudflare-worker-app-void\"\n}\n"
+}
