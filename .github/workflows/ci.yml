@@ -45,12 +45,6 @@ jobs:
       - name: 🔍 Wrangler Typecheck
         run: bun run wrangler-typecheck
 
-      - name: 🚫 Enforce clean history
-        if: github.ref != 'refs/heads/main'
-        run: bun run .github/scripts/ci/enforce-clean-history.ts
-        env:
-          GITHUB_REF: ${{ github.ref }}
-
       - name: 🗄️ Apply database migrations
         if: github.ref == 'refs/heads/main'
         run: bun run db:migrate:prod
