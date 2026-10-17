@@ -25,6 +25,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 						Void Todos
 					</Link>
 					<nav className="flex items-center gap-2">
+						<Link href="/todos" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+							Todos
+						</Link>
 						{user ? (
 							<>
 								<span className="text-muted-foreground hidden max-w-48 truncate text-xs sm:inline">
