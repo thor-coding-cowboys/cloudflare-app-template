@@ -77,6 +77,24 @@ Add the following secrets in your GitHub repository settings (Settings > Secrets
 - `CLOUDFLARE_ACCOUNT_ID` - Found in Cloudflare Dashboard > Workers & Pages > Overview (right sidebar)
 - `CLOUDFLARE_WORKERS_SUBDOMAIN` - Your workers subdomain (e.g., `your-subdomain` from `your-subdomain.workers.dev`)
 
+## Void app (`apps/void`)
+
+An equivalent app built with [Void](https://void.cloud) instead of Hono + tRPC + TanStack Router: server-rendered React pages, file-based routing, page loaders/actions, D1, and Better Auth, all in one Worker. No tRPC. See [`apps/void/README.md`](apps/void/README.md).
+
+```bash
+bun install
+bun --cwd apps/void db:migrate   # apply migrations to the local D1 database
+bun --cwd apps/void dev          # http://localhost:5174
+```
+
+Deploy to your own Cloudflare account — Void provisions D1, applies migrations, and prints the URL:
+
+```bash
+bun --cwd apps/void deploy
+```
+
+Commit `apps/void/void.lock.json` after the first deploy. In CI, set `CLOUDFLARE_API_TOKEN` (and `CLOUDFLARE_ACCOUNT_ID` when the token can reach several accounts). `BETTER_AUTH_SECRET` is generated on first deploy.
+
 ## Getting Started
 
 ```bash

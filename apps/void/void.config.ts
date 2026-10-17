@@ -2,10 +2,25 @@
 import { defineConfig } from "void/config";
 
 export default defineConfig({
+	auth: {
+		providers: ["email"],
+	},
 	worker: {
 		compatibility_date: "2026-02-24",
 	},
 	cloudflare: {
 		name: "cloudflare-worker-app-void",
+	},
+	head: {
+		htmlAttrs: { lang: "en" },
+		meta: [
+			{ charset: "utf-8" },
+			{ name: "viewport", content: "width=device-width, initial-scale=1" },
+			{
+				name: "description",
+				content: "A Void todo app on Cloudflare Workers with D1 and Better Auth.",
+			},
+		],
+		link: [{ rel: "icon", href: "/favicon.svg" }],
 	},
 });
