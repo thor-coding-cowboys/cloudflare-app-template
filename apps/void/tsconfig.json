@@ -7,7 +7,7 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"types": ["void/env"],
+		"types": ["void/env", "vite/client"],
 		"jsx": "react-jsx",
 	},
 	"include": ["src", "pages", "routes", "middleware", "crons", "queues", "db"],

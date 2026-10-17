@@ -36,6 +36,8 @@
 		"wrangler.json",
 		"**/wrangler.jsonc",
 		"**/worker-configuration.d.ts",
+		"**/.void/**",
+		"**/.void-wrangler.jsonc",
 		"**/dist/**",
 		"**/.next/**",
 		"**/node_modules/**",

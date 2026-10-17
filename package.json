@@ -31,7 +31,7 @@
 		"fmt": "oxfmt . *.md",
 		"fmt:check": "oxfmt --check . *.md",
 		"check": "bun typecheck && bun lint:check && bun fmt:check",
-		"prepare": "bun scripts/git-hooks/install.ts",
+		"prepare": "bun scripts/git-hooks/install.ts && bun --cwd apps/void scripts/link-drizzle-orm.ts",
 		"wrangler-typecheck": "turbo run wrangler-typecheck",
 		"db:generate": "bun --cwd apps/worker db:generate",
 		"db:migrate": "bun --cwd apps/worker db:migrate",
@@ -41,7 +41,14 @@
 		"db:migrate:prod": "bun --cwd apps/worker db:migrate:prod",
 		"db:studio": "bun --cwd apps/worker db:studio",
 		"deploy": "bun --cwd apps/worker deploy",
-		"cf-typegen": "bun --cwd apps/worker cf-typegen"
+		"cf-typegen": "bun --cwd apps/worker cf-typegen",
+		"void:dev": "bun --cwd apps/void dev",
+		"void:build": "bun --cwd apps/void build",
+		"void:db:generate": "bun --cwd apps/void db:generate",
+		"void:db:migrate": "bun --cwd apps/void db:migrate",
+		"void:db:seed": "bun --cwd apps/void db:seed",
+		"void:db:studio": "bun --cwd apps/void db:studio",
+		"void:deploy": "bun --cwd apps/void deploy"
 	},
 	"type": "module",
 	"workspaces": [
