@@ -1,19 +1,63 @@
 name: Preview Environment
 
 on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to deploy a preview for (must be open)
+        required: true
+        type: number
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [closed]
+
+concurrency:
+  group: preview-${{ github.event.inputs.pr || github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
   deploy-preview:
-    if: github.event.action != 'closed'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-slim
+    timeout-minutes: 15
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: read
     steps:
+      - name: 🔎 Validate PR is open
+        id: pr
+        uses: actions/github-script@v7
+        env:
+          PR_INPUT: ${{ inputs.pr }}
+        with:
+          script: |
+            const prNumber = Number(process.env.PR_INPUT);
+
+            let pr;
+            try {
+              ({ data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              }));
+            } catch {
+              core.setFailed(`Pull request #${prNumber} was not found in ${context.repo.owner}/${context.repo.repo}.`);
+              return;
+            }
+
+            if (pr.state !== "open") {
+              core.setFailed(`PR #${prNumber} is ${pr.state}. A preview can only be created for an open PR (draft or ready for review).`);
+              return;
+            }
+
+            core.setOutput("pr_number", String(pr.number));
+            core.setOutput("branch", pr.head.ref);
+            core.setOutput("is_draft", String(pr.draft));
+            core.info(`Validated open PR #${pr.number} (branch: ${pr.head.ref}, draft: ${pr.draft})`);
+
       - name: 📥 Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: refs/pull/${{ steps.pr.outputs.pr_number }}/head
 
       - name: 🥟 Setup Bun
         uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
@@ -30,7 +74,7 @@ jobs:
         id: create-db
         run: bun run .github/scripts/preview/create-d1-db.ts
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.pr.outputs.pr_number }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
@@ -38,7 +82,7 @@ jobs:
         id: get-db
         run: bun run .github/scripts/preview/get-d1-db-id.ts
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.pr.outputs.pr_number }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
@@ -46,7 +90,7 @@ jobs:
         id: prepare-config
         run: bun run .github/scripts/preview/prepare-wrangler-config.ts
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.pr.outputs.pr_number }}
           DB_ID: ${{ steps.get-db.outputs.database_id }}
           DB_NAME: ${{ steps.get-db.outputs.database_name }}
 
@@ -72,58 +116,23 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --config wrangler.preview.jsonc
 
-      - name: 📋 Get preview URL
-        id: get-url
+      - name: 📋 Summarize preview
         run: |
-          PREVIEW_URL="https://${{ steps.prepare-config.outputs.worker_name }}.${{ secrets.CLOUDFLARE_WORKERS_SUBDOMAIN }}.workers.dev"
-          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-
-      - name: 💬 Comment on PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.issue.number;
-            const previewUrl = '${{ steps.get-url.outputs.preview_url }}';
-            const dbName = '${{ steps.get-db.outputs.database_name }}';
-
-            const comment = `## 🚀 Preview Environment Deployed
-
-            **Preview URL:** <a href="${previewUrl}" target="_blank">${previewUrl}</a>
-            **Database:** \`${dbName}\`
-
-            This preview environment will be automatically cleaned up when the PR is closed.`;
-
-            // Find existing comment
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-            });
-
-            const botComment = comments.find(comment =>
-              comment.user.type === 'Bot' &&
-              comment.body.includes('Preview Environment Deployed')
-            );
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: comment
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: comment
-              });
-            }
+          {
+            echo "## 🚀 Preview Environment Deployed"
+            echo ""
+            echo "- **Branch:** \`${{ steps.pr.outputs.branch }}\`"
+            echo "- **PR:** #${{ steps.pr.outputs.pr_number }}"
+            echo "- **Preview URL:** https://${{ steps.prepare-config.outputs.worker_name }}.${{ secrets.CLOUDFLARE_WORKERS_SUBDOMAIN }}.workers.dev"
+            echo "- **Database:** \`${{ steps.get-db.outputs.database_name }}\`"
+            echo ""
+            echo "This preview is cleaned up automatically when PR #${{ steps.pr.outputs.pr_number }} is closed."
+          } >> "$GITHUB_STEP_SUMMARY"
 
   cleanup-preview:
-    if: github.event.action == 'closed'
-    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-slim
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write
@@ -139,7 +148,16 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install
 
+      - name: 🔎 Check whether a preview exists for this PR
+        id: check
+        run: bun run .github/scripts/preview/preview-exists.ts
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: 🗑️ Delete Worker
+        if: steps.check.outputs.exists == 'true'
         continue-on-error: true
         run: bun run .github/scripts/preview/delete-worker.ts
         env:
@@ -148,6 +166,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: 🗑️ Delete D1 Database
+        if: steps.check.outputs.exists == 'true'
         continue-on-error: true
         run: bun run .github/scripts/preview/delete-d1-db.ts
         env:
@@ -156,6 +175,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: 💬 Comment on PR
+        if: steps.check.outputs.exists == 'true'
         uses: actions/github-script@v7
         with:
           script: |
