@@ -3,12 +3,8 @@ import { todo, type Todo } from "@schema";
 
 export type { Todo };
 
-export function listTodos(userId: string): Promise<Todo[]> {
-	return db
-		.select()
-		.from(todo)
-		.where(eq(todo.userId, userId))
-		.orderBy(desc(todo.createdAt), desc(todo.id));
+export function listTodos(): Promise<Todo[]> {
+	return db.select().from(todo).orderBy(desc(todo.createdAt), desc(todo.id));
 }
 
 export async function createTodo(userId: string, title: string): Promise<Todo> {

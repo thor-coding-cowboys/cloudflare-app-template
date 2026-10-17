@@ -10,8 +10,10 @@ D1 for storage, and Better Auth for email/password sessions. It mirrors what
 - **Auth** (`pages/sign-in.tsx`, `pages/sign-up.tsx`) — Better Auth email + password,
   configured by Void (`void.config.ts` → `auth.providers`). Auth tables and the
   `/api/auth/*` routes are managed by Void; you do not write them.
-- **Todos** (`pages/todos/`) — per-user CRUD via a page loader plus named page
-  actions, using `Form`/`useForm` and `action()` from `@void/react`.
+- **Todos** (`pages/todos/`) — the list is public, so signed-out visitors can see
+  todos. Creating, toggling, editing, and deleting require a session; mutations are
+  scoped to the signed-in user. Built with a page loader plus named page actions,
+  using `Form`/`useForm` and `action()` from `@void/react`.
 - **Shared auth for layouts** (`middleware/01.shared.ts`) — exposes the current user
   through `useShared()` and injects the pre-paint theme script.
 

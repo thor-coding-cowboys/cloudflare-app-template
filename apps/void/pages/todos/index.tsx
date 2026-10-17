@@ -1,6 +1,6 @@
 import { Delete02Icon, PencilEdit02Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { action, Form, useForm } from "@void/react";
+import { action, Form, Link, useForm, useShared } from "@void/react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../src/components/ui/button";
 import {
@@ -17,6 +17,8 @@ import type { Props } from "./index.server";
 type TodoItem = Props["todos"][number];
 
 export default function TodosPage({ todos }: Props) {
+	const { auth } = useShared();
+	const isAuthenticated = !!auth.user;
 	const form = useForm("/todos?create", { title: "" });
 	const [error, setError] = useState<string | null>(null);
 	const [editing, setEditing] = useState<{ id: string; title: string } | null>(null);
@@ -67,31 +69,44 @@ export default function TodosPage({ todos }: Props) {
 	return (
 		<Card className="mx-auto w-full max-w-xl">
 			<CardHeader className="border-b">
-				<CardTitle className="text-lg">Your todos</CardTitle>
+				<CardTitle className="text-lg">Todos</CardTitle>
 				<CardDescription>
 					{todos.length === 0
-						? "Nothing here yet — add your first todo."
+						? isAuthenticated
+							? "Nothing here yet — add your first todo."
+							: "Nothing here yet."
 						: `${open} open of ${todos.length}`}
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="flex flex-col gap-4">
 				{error && <p className="text-destructive text-xs">{error}</p>}
 
-				<Form form={form} className="flex items-start gap-2">
-					<Input
-						name="title"
-						placeholder="What needs doing?"
-						aria-label="New todo"
-						value={form.data.title}
-						onChange={(event) => form.setData("title", event.target.value)}
-						aria-invalid={form.errors.title ? true : undefined}
-					/>
-					<Button type="submit" disabled={form.pending}>
-						<HugeiconsIcon icon={PlusSignIcon} />
-						Add
-					</Button>
-				</Form>
-				{form.errors.title && <p className="text-destructive text-xs">{form.errors.title}</p>}
+				{isAuthenticated ? (
+					<>
+						<Form form={form} className="flex items-start gap-2">
+							<Input
+								name="title"
+								placeholder="What needs doing?"
+								aria-label="New todo"
+								value={form.data.title}
+								onChange={(event) => form.setData("title", event.target.value)}
+								aria-invalid={form.errors.title ? true : undefined}
+							/>
+							<Button type="submit" disabled={form.pending}>
+								<HugeiconsIcon icon={PlusSignIcon} />
+								Add
+							</Button>
+						</Form>
+						{form.errors.title && <p className="text-destructive text-xs">{form.errors.title}</p>}
+					</>
+				) : (
+					<p className="text-muted-foreground text-xs">
+						<Link href="/sign-in" className="text-primary hover:underline">
+							Sign in
+						</Link>{" "}
+						to add or change todos.
+					</p>
+				)}
 
 				{todos.length === 0 ? (
 					<p className="text-muted-foreground py-8 text-center">No todos yet.</p>
@@ -99,14 +114,16 @@ export default function TodosPage({ todos }: Props) {
 					<ul className="flex flex-col gap-2">
 						{todos.map((todo) => (
 							<li key={todo.id} className="flex min-h-10 items-center gap-2 border px-2.5 py-1.5">
-								<Checkbox
-									checked={todo.completed}
-									disabled={busyId === todo.id}
-									aria-label={
-										todo.completed ? `Mark "${todo.title}" as open` : `Complete "${todo.title}"`
-									}
-									onCheckedChange={() => toggle(todo)}
-								/>
+								{isAuthenticated && (
+									<Checkbox
+										checked={todo.completed}
+										disabled={busyId === todo.id}
+										aria-label={
+											todo.completed ? `Mark "${todo.title}" as open` : `Complete "${todo.title}"`
+										}
+										onCheckedChange={() => toggle(todo)}
+									/>
+								)}
 
 								{editing?.id === todo.id ? (
 									<>
@@ -139,23 +156,27 @@ export default function TodosPage({ todos }: Props) {
 										>
 											{todo.title}
 										</span>
-										<Button
-											size="icon-sm"
-											variant="ghost"
-											aria-label={`Edit "${todo.title}"`}
-											onClick={() => setEditing({ id: todo.id, title: todo.title })}
-										>
-											<HugeiconsIcon icon={PencilEdit02Icon} />
-										</Button>
-										<Button
-											size="icon-sm"
-											variant="ghost"
-											disabled={busyId === todo.id}
-											aria-label={`Delete "${todo.title}"`}
-											onClick={() => remove(todo.id)}
-										>
-											<HugeiconsIcon icon={Delete02Icon} />
-										</Button>
+										{isAuthenticated && (
+											<div className="flex gap-1">
+												<Button
+													size="icon-sm"
+													variant="ghost"
+													aria-label={`Edit "${todo.title}"`}
+													onClick={() => setEditing({ id: todo.id, title: todo.title })}
+												>
+													<HugeiconsIcon icon={PencilEdit02Icon} />
+												</Button>
+												<Button
+													size="icon-sm"
+													variant="ghost"
+													disabled={busyId === todo.id}
+													aria-label={`Delete "${todo.title}"`}
+													onClick={() => remove(todo.id)}
+												>
+													<HugeiconsIcon icon={Delete02Icon} />
+												</Button>
+											</div>
+										)}
 									</>
 								)}
 							</li>

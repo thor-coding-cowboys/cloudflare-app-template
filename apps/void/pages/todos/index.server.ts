@@ -1,13 +1,9 @@
 import { createTodoSchema, deleteTodoSchema, renameTodoSchema, toggleTodoSchema } from "@schema";
 import { defineHandler, defineHead, type InferProps } from "void";
-import { getUser, requireAuth } from "void/auth";
+import { requireAuth } from "void/auth";
 import { createTodo, deleteTodo, listTodos, updateTodo } from "../../src/lib/todos";
 
-export const loader = defineHandler(async (c) => {
-	const user = getUser();
-	if (!user) return c.redirect("/sign-in");
-	return { todos: await listTodos(user.id) };
-});
+export const loader = defineHandler(async () => ({ todos: await listTodos() }));
 
 export type Props = InferProps<typeof loader>;
 
